@@ -1,4 +1,3 @@
-// Copyright 2021 NNTU-CS
 #include "train.h"
 
 Train::Train() : countOp(0), first(nullptr) {}
@@ -27,50 +26,43 @@ int Train::getLength() {
 
     countOp = 0;
 
-    first->light = true;
+    Car *start = first;
 
-    Car *current = first->next;
+    start->light = true;
+
+    Car *current = start->next;
     countOp++;
     int length = 1;
 
-    while (current->light != true) {
+    while (true) {
+        if (current->light == true) {
+            if (current == start) {
+                break;
+            }
+            current->light = false;
+            current = start->next;
+            countOp++;
+            length = 1;
+            continue;
+        }
         current->light = false;
         current = current->next;
         countOp++;
         length++;
     }
 
-    if (current == first) {
-        return length;
-    }
+    start->light = false;
 
-    Car *backup = current;
-    current = first->next;
+    current = start->next;
     countOp++;
-    int backupLength = 1;
-
-    while (current != backup) {
-        current->light = false;
+    int finalLength = 1;
+    while (current != start) {
         current = current->next;
         countOp++;
-        backupLength++;
+        finalLength++;
     }
 
-    current = backup->next;
-    countOp++;
-    int secondLength = 1;
-
-    while (current != first) {
-        current = current->next;
-        countOp++;
-        secondLength++;
-    }
-
-    if (backupLength == secondLength) {
-        return backupLength;
-    }
-
-    return length;
+    return finalLength;
 }
 
 int Train::getOpCount() {
