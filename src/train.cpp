@@ -4,7 +4,7 @@
 Train::Train() : countOp(0), first(nullptr) {}
 
 void Train::addCar(bool light) {
-    Cage *newCar = new Cage;
+    Train::Cage *newCar = new Train::Cage;
     newCar->light = light;
     newCar->next = nullptr;
     newCar->prev = nullptr;
@@ -14,7 +14,7 @@ void Train::addCar(bool light) {
         first->next = first;
         first->prev = first;
     } else {
-        Cage *last = first->prev;
+        Train::Cage *last = first->prev;
         last->next = newCar;
         newCar->prev = last;
         newCar->next = first;
@@ -29,7 +29,7 @@ int Train::getLength() {
 
     first->light = true;
 
-    Cage *current = first->next;
+    Train::Cage *current = first->next;
     countOp++;
     int length = 1;
 
@@ -44,7 +44,7 @@ int Train::getLength() {
         return length;
     }
 
-    Cage *backup = current;
+    Train::Cage *backup = current;
     current = first->next;
     countOp++;
     int backupLength = 1;
