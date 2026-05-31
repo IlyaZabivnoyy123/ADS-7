@@ -1,11 +1,16 @@
 // Copyright 2021 NNTU-CS
 #include "train.h"
-#include "train.h"
+
+struct Car {
+    bool light;
+    Car *next;
+    Car *prev;
+};
 
 Train::Train() : countOp(0), first(nullptr) {}
 
 void Train::addCar(bool light) {
-    Train::Cage *newCar = new Train::Cage;
+    Car *newCar = new Car;
     newCar->light = light;
     newCar->next = nullptr;
     newCar->prev = nullptr;
@@ -15,7 +20,7 @@ void Train::addCar(bool light) {
         first->next = first;
         first->prev = first;
     } else {
-        Train::Cage *last = first->prev;
+        Car *last = first->prev;
         last->next = newCar;
         newCar->prev = last;
         newCar->next = first;
@@ -30,7 +35,7 @@ int Train::getLength() {
 
     first->light = true;
 
-    Train::Cage *current = first->next;
+    Car *current = first->next;
     countOp++;
     int length = 1;
 
@@ -45,7 +50,7 @@ int Train::getLength() {
         return length;
     }
 
-    Train::Cage *backup = current;
+    Car *backup = current;
     current = first->next;
     countOp++;
     int backupLength = 1;
