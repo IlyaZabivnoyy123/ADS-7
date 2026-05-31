@@ -3,6 +3,17 @@
 
 Train::Train() : countOp(0), first(nullptr) {}
 
+Train::~Train() {
+  // Освобождаем память
+  if (first == nullptr) return;
+  Car* cur = first;
+  do {
+    Car* next = cur->next;
+    delete cur;
+    cur = next;
+  } while (cur != first);
+}
+
 void Train::addCar(bool light) {
   Car* newCar = new Car;
   newCar->light = light;
@@ -13,34 +24,34 @@ void Train::addCar(bool light) {
     first->next = first;
     first->prev = first;
   } else {
-    Car* backCar = first->prev;
-    backCar->next = newCar;
+    Car* back = first->prev;
+    back->next = newCar;
     first->prev = newCar;
     newCar->next = first;
-    newCar->prev = backCar;
+    newCar->prev = back;
   }
 }
 
 int Train::getLength() {
   if (first == nullptr) return 0;
-  Car* current = first;
-  current->light = true;
+  Car* cur = first;
+  cur->light = true;
   while (true) {
-    int forward = 0;
+    int steps = 0;
     do {
-      current = current->next;
+      cur = cur->next;
       countOp++;
-      forward++;
-      } while (!current->light);
-    current->light = false;
-    for (int j = 0; j < forward; j++) {
-      current = current->prev;
+      steps++;
+    } while (!cur->light);
+    cur->light = false;
+    for (int i = 0; i < steps; i++) {
+      cur = cur->prev;
       countOp++;
-      }
-    if (!current->light) {
-      return forward;
-      }
     }
+    if (!cur->light) {
+      return steps;
+    }
+  }
 }
 
 int Train::getOpCount() { return countOp; }
