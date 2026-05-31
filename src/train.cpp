@@ -4,54 +4,46 @@
 Train::Train() : countOp(0), first(nullptr) {}
 
 Train::~Train() {
-  // Освобождаем память
-  if (first == nullptr) return;
-  Car* cur = first;
-  do {
-    Car* next = cur->next;
-    delete cur;
-    cur = next;
-  } while (cur != first);
 }
 
 void Train::addCar(bool light) {
-  Car* newCar = new Car;
-  newCar->light = light;
-  newCar->next = nullptr;
-  newCar->prev = nullptr;
+  Car* anotherCar = new Car;
+  anotherCar->light = light;
+  anotherCar->next = nullptr;
+  anotherCar->prev = nullptr;
   if (first == nullptr) {
-    first = newCar;
+    first = anotherCar;
     first->next = first;
     first->prev = first;
   } else {
-    Car* back = first->prev;
-    back->next = newCar;
-    first->prev = newCar;
-    newCar->next = first;
-    newCar->prev = back;
+    Car* lastCar = first->prev;
+    lastCar->next = anotherCar;
+    first->prev = anotherCar;
+    anotherCar->next = first;
+    anotherCar->prev = lastCar;
   }
 }
 
 int Train::getLength() {
   if (first == nullptr) return 0;
-  Car* cur = first;
-  cur->light = true;
+  Car* now = first;
+  now->light = true;
   while (true) {
     int steps = 0;
     do {
-      cur = cur->next;
+      now = now->next;
       countOp++;
       steps++;
-    } while (!cur->light);
-    cur->light = false;
+      } while (!now->light);
+    now->light = false;
     for (int i = 0; i < steps; i++) {
-      cur = cur->prev;
+      now = now->prev;
       countOp++;
-    }
-    if (!cur->light) {
+      }
+    if (!now->light) {
       return steps;
+      }
     }
-  }
 }
 
 int Train::getOpCount() { return countOp; }
