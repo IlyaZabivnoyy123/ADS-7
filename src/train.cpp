@@ -1,11 +1,6 @@
 // Copyright 2021 NNTU-CS
 #include "train.h"
-
-struct Car {
-    bool light;
-    Car *next;
-    Car *prev;
-};
+#include "train.h"
 
 Train::Train() : countOp(0), first(nullptr) {}
 
@@ -33,47 +28,44 @@ int Train::getLength() {
 
     countOp = 0;
 
-    first->light = true;
+    Car *start = first;
+    start->light = true;
 
-    Car *current = first->next;
+    Car *current = start->next;
     countOp++;
-    int length = 1;
+    int steps = 1;
 
     while (current->light != true) {
         current->light = false;
         current = current->next;
         countOp++;
+        steps++;
+    }
+
+    if (current == start) {
+        return steps;
+    }
+
+    for (int i = 0; i < steps; i++) {
+        current = current->prev;
+        countOp++;
+    }
+
+    if (current->light == true && current != start) {
+        start->light = false;
+        countOp = 0;
+        return getLength();
+    }
+
+    start->light = false;
+    current = start->next;
+    countOp++;
+    int length = 1;
+
+    while (current != start) {
+        current = current->next;
+        countOp++;
         length++;
-    }
-
-    if (current == first) {
-        return length;
-    }
-
-    Car *backup = current;
-    current = first->next;
-    countOp++;
-    int backupLength = 1;
-
-    while (current != backup) {
-        current->light = false;
-        current = current->next;
-        countOp++;
-        backupLength++;
-    }
-
-    current = backup->next;
-    countOp++;
-    int secondLength = 1;
-
-    while (current != first) {
-        current = current->next;
-        countOp++;
-        secondLength++;
-    }
-
-    if (backupLength == secondLength) {
-        return backupLength;
     }
 
     return length;
